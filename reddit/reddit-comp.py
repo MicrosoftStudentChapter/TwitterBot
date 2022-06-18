@@ -3,7 +3,7 @@ import praw  # pip install praw
 from dotenv import load_dotenv  # pip install python-dotenv
 import sqlite3
 
-with open('interest.txt', 'r') as file:
+with open('reddit/interest.txt', 'r') as file:
     interesting_boring = file.read().splitlines()  # wanted and unwanted keywords
 interesting_keywords = set(interesting_boring[0].lower().split())
 boring_keywords = set(interesting_boring[1].lower().split())
