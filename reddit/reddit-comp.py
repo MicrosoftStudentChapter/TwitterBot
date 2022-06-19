@@ -16,7 +16,7 @@ reddit = praw.Reddit(
     user_agent=getenv("USER_AGENT"),
 )
 
-connection = sqlite3.connect('../news.db')
+connection = sqlite3.connect('news.db')
 cursor = connection.cursor()
 cursor.execute(
     '''CREATE TABLE IF NOT EXISTS News(ID VARCHAR(10) PRIMARY KEY, SUBREDDIT VARCHAR(50), FLAIR VARCHAR(50) DEFAULT 'None', 
