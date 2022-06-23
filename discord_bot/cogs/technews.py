@@ -8,6 +8,10 @@ connection = sqlite3.connect('../twitterBot.db')
 cursor = connection.cursor()
 
 
+def random_six_digit_number_hex():
+    return hex(random.randint(0, 8 ** 6))[2:]
+
+
 class TechNews(commands.Cog):
     def __init__(self, client):
         self.client = client
@@ -17,7 +21,8 @@ class TechNews(commands.Cog):
         query = list(cursor.execute('''select * from News where SEEN = 0'''))
         ch = random.choice(seq=query)
         channel = self.client.get_channel(988184220327366746)  # TODO: Change in Production build
-        news = await channel.send(embed=discord.Embed(title="How do you like this?", description=f"{ch[3]}\n [Here]({ch[4]})", ))
+        news = await channel.send(
+            embed=discord.Embed(title="How do you like this?", description=f"{ch[3]}\n [Here]({ch[4]})", ))
         cursor.execute('''UPDATE News SET SEEN = ? WHERE ID IS ?''', (str(news.id), ch[0]))
         connection.commit()
         await news.add_reaction('👍🏼')
@@ -74,7 +79,14 @@ class TechNews(commands.Cog):
         except discord.errors.Forbidden:
             await ctx.send("Your DMs are closed")
 
+    @commands.command(help="Add a user submission to the news\nWill always be displayed on the weekly tweet thread")
+    @commands.check_any(commands.has_permissions(ban_members=True), commands.is_owner())
+    async def add_news(self, ctx, title, url):
+        cursor.execute('''INSERT INTO News (ID, SUBREDDIT, FLAIR, TITLE, URL) VALUES (?, "usersub", "usersubmission", ?, ?)''',
+                       (random_six_digit_number_hex(), title, url))
+        connection.commit()
+        await ctx.send(embed=discord.Embed(title="Success", description="Added to the news"))
+
 
 def setup(client):
     client.add_cog(TechNews(client))
-
