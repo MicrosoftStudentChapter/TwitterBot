@@ -42,7 +42,7 @@ python reddit/reddit-comp.py #Run the Reddit News Compilation ONLY
 ```
 
 ```bash
-python discord_bot/discord_main.py #Run Discord bot (By default all COGs are active run `!help` to lookup commands [WIP]
+python discord_bot/discord_main.py #Run Discord bot (By default all COGs are active run `.help` to lookup commands
 ```
 
 ```bash
