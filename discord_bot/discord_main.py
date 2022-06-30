@@ -40,21 +40,21 @@ class CustomHelpCommand(commands.HelpCommand):
 
     def get_ending_note(self):
         command_name = self.invoked_with
-        return "Type {0}{1} <command/category> for more information".format(self.clean_prefix, command_name)
+        return "Type {0}{1} <command/category> for more information | [Optional Arg], <Required Arg>".format(self.clean_prefix, command_name)
 
     async def send_bot_help(self, mapping):
         help_command = discord.Embed(
             title='Help is on the way',
             description=f'Heard you needed help! Here are all the commands you can access. {client.description}',
             colour=discord.Colour.blurple(),
-            timestamp=datetime.datetime.utcnow(),
+
         )
         for cog in mapping:
             if cog is not None:
                 cog_name = cog.qualified_name
             else:
-                cog_name = 'Default Commands'
-            filtered = await self.filter_commands([command for command in mapping[cog]], sort=True)
+                cog_name = 'Normie Commands'
+            filtered = await self.filter_commands([command for command in mapping[cog]])
             value = os.linesep.join([("> " + command.name.title()) for command in filtered])
             if len(value) > 1:
                 help_command.add_field(name=cog_name, value=value)
