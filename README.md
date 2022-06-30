@@ -8,7 +8,9 @@ Install [python and pip](https://www.python.org/downloads/) and add them in your
 ### Usage
 Let's install a virtual env in your PC
 
-`pip install venv`
+```bash
+pip install venv
+```
 
 Now cd to the directory Cloned
 ### Virtual Python Environment
@@ -30,10 +32,20 @@ pip install -r requirements.txt
 ### env Variables
 
 Create a `.env` file or rename `.env.example` to `.env` and supply the credentials as demanded.
-### Running the Bot
 
-Congrats, Now You are Ready to actually Run the data collection module by following command :-
+### Running the Bot(s)
+
+Congrats, Now there are a few Bots which can be used  following the successful installation of modules
 
 ```bash
-python reddit-comp.py
+python reddit/reddit-comp.py #Run the Reddit News Compilation ONLY
+```
+
+```bash
+python discord_bot/discord_main.py #Run Discord bot (By default all COGs are active run `.help` to lookup commands
+```
+
+```bash
+python scrape/<website>.py #Run Website News Scraping ONLY and store it to the Database [WIP]
+python scrape/scrape_all.py #Scrape All Listed Websites and store into Database [WIP]
 ```
