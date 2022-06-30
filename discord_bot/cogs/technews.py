@@ -1,5 +1,7 @@
 import discord
+import requests
 from discord.ext import commands, tasks
+from discord_bot import error_messages
 import random
 import sqlite3
 import csv
@@ -39,7 +41,6 @@ class TechNews(commands.Cog):
                 cursor.execute('''UPDATE News SET IMPORTANCE = IMPORTANCE+100 WHERE SEEN IS ?''',
                                (str(message_object.id),))
                 connection.commit()
-            print('add ran')
 
     @commands.Cog.listener('on_raw_reaction_remove')
     async def technews_remove(self, payload):
@@ -53,7 +54,6 @@ class TechNews(commands.Cog):
                 cursor.execute('''UPDATE News SET IMPORTANCE = IMPORTANCE-100 WHERE SEEN IS ?''',
                                (str(message_object.id),))
                 connection.commit()
-            print("remove ran")
 
     @commands.Cog.listener()
     async def on_ready(self):
@@ -82,8 +82,9 @@ class TechNews(commands.Cog):
     @commands.command(help="Add a user submission to the news\nWill always be displayed on the weekly tweet thread")
     @commands.check_any(commands.has_permissions(ban_members=True), commands.is_owner())
     async def add_news(self, ctx, title, url):
-        cursor.execute('''INSERT INTO News (ID, SUBREDDIT, FLAIR, TITLE, URL) VALUES (?, "usersub", "usersubmission", ?, ?)''',
-                       (random_six_digit_number_hex(), title, url))
+        cursor.execute(
+            '''INSERT INTO News (ID, SUBREDDIT, FLAIR, TITLE, URL) VALUES (?, "usersub", "usersubmission", ?, ?)''',
+            (random_six_digit_number_hex(), title, url))
         connection.commit()
         await ctx.send(embed=discord.Embed(title="Success", description="Added to the news"))
 
