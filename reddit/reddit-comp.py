@@ -8,7 +8,7 @@ with open('reddit/interest.txt', 'r') as file:
 interesting_keywords = set(interesting_boring[0].lower().split())
 boring_keywords = set(interesting_boring[1].lower().split())
 
-subreddit_str = "programming+technews+technology"  # subreddits searched seperated with '+'
+subreddit_str = "tech+programming+technews+technology"  # subreddits searched seperated with '+'
 load_dotenv()
 reddit = praw.Reddit(
     client_id=getenv('CLIENT_ID'),
@@ -19,7 +19,7 @@ reddit = praw.Reddit(
 connection = sqlite3.connect('twitterBot.db')
 cursor = connection.cursor()
 cursor.execute(
-    '''CREATE TABLE IF NOT EXISTS News(ID VARCHAR(10) PRIMARY KEY, SUBREDDIT VARCHAR(50), FLAIR VARCHAR(50) DEFAULT 'None', 
+    '''CREATE TABLE IF NOT EXISTS News(ID VARCHAR(10) PRIMARY KEY, SUBREDDIT VARCHAR(50), FLAIR VARCHAR(50), 
     TITLE VARCHAR(500) UNIQUE, URL VARCHAR(255) UNIQUE, RATIO FLOAT, SCORE INT, TOTALCOMMENTS INT, IMPORTANCE INT, SEEN BITINT);''')  # table schema
 connection.commit()
 
