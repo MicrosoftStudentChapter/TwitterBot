@@ -1,6 +1,4 @@
-# import datetime
 import datetime
-import re
 import discord
 from discord.ext import commands
 
@@ -135,6 +133,7 @@ class Moderation(commands.Cog):
                 await msg.add_reaction(NUM_DICT[i])
         else:
             raise error_messages.YouMadeAMistake(value=options, message="You need at least 2 options")
+
 
 def setup(client):
     client.add_cog(Moderation(client))
