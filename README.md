@@ -44,8 +44,7 @@ python reddit/reddit-comp.py #Run the Reddit News Compilation ONLY
 ```bash
 python discord_bot/discord_main.py #Run Discord bot (By default all COGs are active run `.help` to lookup commands
 ```
-
+    
 ```bash
-python scrape/<website>.py #Run Website News Scraping ONLY and store it to the Database [WIP]
-python scrape/scrape_all.py #Scrape All Listed Websites and store into Database [WIP]
+python twitter/twitter_main.py #Run Twitter bot
 ```
