@@ -1,5 +1,4 @@
 import discord
-import requests
 from discord.ext import commands, tasks
 from discord_bot import error_messages
 import random
