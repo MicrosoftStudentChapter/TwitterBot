@@ -26,9 +26,10 @@ for news_item in news_list:
         tweet = "[USER SUBMITTED] "
     elif last_tweet is None:
         utc = datetime.datetime.utcnow()
-        tweet = f'It\'s Tech News Time for the week [{(utc - datetime.timedelta(days=7)).strftime("%m/%d/%Y")}] - [{utc.strftime("%m/%d/%Y")}]:\n'
+        tweet = f'It\'s #TechNews Time for the week [{(utc - datetime.timedelta(days=7)).strftime("%m/%d/%Y")}] - [{utc.strftime("%m/%d/%Y")}]:\n '
     else:
         tweet = ''
-    last_tweet = client.create_tweet(text=f'{tweet}{news_item[3]} ({news_item[8]})\nVia:{news_item[4]}',
-                                     in_reply_to_tweet_id=int(
-                                         last_tweet.data['id']) if last_tweet is not None else None)
+    last_tweet = client.create_tweet(
+        text=f'{tweet}{news_item[3]} ({news_item[8]}) {("#" + news_item[2].replace(" ", "").replace("/", " #")) if news_item[2] is not None else "#news"}\nVia:{news_item[4]}',
+        in_reply_to_tweet_id=int(
+            last_tweet.data['id']) if last_tweet is not None else None)
