@@ -33,3 +33,4 @@ for news_item in news_list:
         text=f'{tweet}{news_item[3]} ({news_item[8]}) {("#" + news_item[2].replace(" ", "").replace("/", " #")) if news_item[2] is not None else "#news"}\nVia:{news_item[4]}',
         in_reply_to_tweet_id=int(
             last_tweet.data['id']) if last_tweet is not None else None)
+    client.like(last_tweet.data['id'])
