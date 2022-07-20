@@ -1,9 +1,6 @@
-# import datetime
 import datetime
-import re
 import discord
 from discord.ext import commands
-
 from discord_bot import error_messages
 
 # TIME_REGEX = re.compile(r"(?:(\d{1,5})([hsmdw]))+?")
@@ -135,6 +132,7 @@ class Moderation(commands.Cog):
                 await msg.add_reaction(NUM_DICT[i])
         else:
             raise error_messages.YouMadeAMistake(value=options, message="You need at least 2 options")
+
 
 def setup(client):
     client.add_cog(Moderation(client))

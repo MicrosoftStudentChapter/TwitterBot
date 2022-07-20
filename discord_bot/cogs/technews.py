@@ -1,5 +1,4 @@
 import discord
-import requests
 from discord.ext import commands, tasks
 from discord_bot import error_messages
 import random
@@ -83,8 +82,8 @@ class TechNews(commands.Cog):
     @commands.check_any(commands.has_permissions(ban_members=True), commands.is_owner())
     async def add_news(self, ctx, title, url):
         cursor.execute(
-            '''INSERT INTO News (ID, SUBREDDIT, FLAIR, TITLE, URL) VALUES (?, "usersub", "usersubmission", ?, ?)''',
-            (random_six_digit_number_hex(), title, url))
+            '''INSERT INTO News (ID, SUBREDDIT, FLAIR, TITLE, URL, IMPORTANCE, SEEN) VALUES (?, "usersub", "usersubmission", ?, ?, ?, 0)''',
+            (random_six_digit_number_hex(), title, url, random.randint(10000, 25000)))
         connection.commit()
         await ctx.send(embed=discord.Embed(title="Success", description="Added to the news"))
 
