@@ -2,11 +2,18 @@ from os import getenv
 import praw  # pip install praw
 from dotenv import load_dotenv  # pip install python-dotenv
 import sqlite3
+from twitter import get_trends
+load_dotenv()
 
 with open('reddit/interest.txt', 'r') as file:
     interesting_boring = file.read().splitlines()  # wanted and unwanted keywords
 interesting_keywords = set(interesting_boring[0].lower().split())
+trends = set(get_trends.hot(consumer_key=getenv('CONSUMER_KEY'), consumer_secret=getenv('CONSUMER_SECRET'),
+                            access_token=getenv("ACCESS_TOKEN"), access_secret=getenv("ACCESS_SECRET")))
+interesting_keywords = interesting_keywords.union(trends)
+
 boring_keywords = set(interesting_boring[1].lower().split())
+
 
 subreddit_str = "tech+programming+technews+technology"  # subreddits searched seperated with '+'
 load_dotenv()
