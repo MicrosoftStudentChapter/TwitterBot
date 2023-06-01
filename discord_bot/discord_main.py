@@ -123,6 +123,10 @@ async def on_ready():
 
     cursor.execute('''CREATE TABLE IF NOT EXISTS cogs(name VARCHAR(20) PRIMARY KEY, toggle BIT(1));''')  # table schema
     connection.commit()
+    cursor.execute(
+        '''CREATE TABLE IF NOT EXISTS News(ID VARCHAR(10) PRIMARY KEY, SUBREDDIT VARCHAR(50), FLAIR VARCHAR(50), 
+        TITLE VARCHAR(500) UNIQUE, URL VARCHAR(255) UNIQUE, RATIO FLOAT, SCORE INT, TOTALCOMMENTS INT, IMPORTANCE INT, SEEN BITINT);''')  # table schema
+    connection.commit()
     query = list(cursor.execute('''SELECT * FROM COGS'''))
     cog_list_query = [cog[0] for cog in query]
     for cog in cog_list:
