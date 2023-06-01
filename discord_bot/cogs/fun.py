@@ -10,21 +10,6 @@ class Fun(commands.Cog):
     def __init__(self, client):
         self.client = client
 
-    @commands.command(help="Get a random cat picture\nAccess: Everyone")
-    async def cat(self, ctx):
-        response = requests.get("https://aws.random.cat/meow")
-        if response.status_code == 200:
-            data = response.json()
-            embed = discord.Embed(
-                title="Random Cat Picture",
-                colour=discord.Colour.blurple(),
-                timestamp=datetime.datetime.utcnow()
-            )
-            embed.set_image(url=data['file'])
-            await ctx.send(embed=embed)
-        else:
-            raise error_messages.YouMadeAMistake(value="cat",
-                                                 message=f"There was an error getting a cat picture ({response.status_code})")
 
     @commands.command(help="Get a random dog picture\nAccess: Everyone")
     async def dog(self, ctx):
@@ -119,57 +104,6 @@ class Fun(commands.Cog):
             raise error_messages.YouMadeAMistake(value="truth",
                                                  message=f"There was an error getting a truth ({response.status_code})")
 
-    @commands.command(help='Ask for a pickup line\nAccess: Everyone')
-    async def pickup(self, ctx):
-        response = requests.get("https://getpickuplines.herokuapp.com/lines/random")
-
-        if response.status_code == 200:
-            data = response.json()
-            embed = discord.Embed(
-                title="Random Pickup Line",
-                description=data['line'],
-                colour=discord.Colour.blurple(),
-                timestamp=datetime.datetime.utcnow()
-            )
-            await ctx.send(embed=embed)
-        else:
-            raise error_messages.YouMadeAMistake(value="pickup",
-                                                 message=f"There was an error getting a pickup line ({response.status_code})")
-
-    @commands.command(help="How old does the bot think you are?\nAccess: Everyone")
-    async def oldie(self, ctx, name: str = None):
-        if name is None:
-            name = ctx.author.display_name.split()[0]
-        response = requests.get(f"https://api.agify.io/?name={name}")
-        if response.status_code == 200:
-            data = response.json()
-            embed = discord.Embed(
-                title=f"How old is {name}?",
-                description=f"According to Agify, {name} is {data['age']} years old.",
-                colour=discord.Colour.blurple(),
-                timestamp=datetime.datetime.utcnow()
-            )
-            await ctx.send(embed=embed)
-        else:
-            raise error_messages.YouMadeAMistake(value="oldie",
-                                                 message=f"There was an error getting the age of the user ({response.status_code})")
-
-    @commands.command(help="Get a Kanye West quote\nAccess: Everyone")
-    async def kanye(self, ctx):
-        response = requests.get("https://api.kanye.rest")
-        if response.status_code == 200:
-            data = response.json()
-            embed = discord.Embed(
-                title="Kanye West Quote",
-                description=data['quote'],
-                colour=discord.Colour.blurple(),
-                timestamp=datetime.datetime.utcnow()
-            )
-            await ctx.send(embed=embed)
-        else:
-            raise error_messages.YouMadeAMistake(value="kanye",
-                                                 message=f"There was an error getting a Kanye West quote ({response.status_code})")
-
     @commands.command(help="Translate to Yoda\nAccess: Everyone")
     async def yoda(self, ctx, *, text):
         response = requests.post("https://api.funtranslations.com/translate/yoda.json", data={"text": text})
@@ -199,26 +133,6 @@ class Fun(commands.Cog):
             raise error_messages.YouMadeAMistake(value="Dad",
                                                  message=f"There was an error getting a Dad Joke ({response.status_code})")
 
-    @commands.command(help='Get a Chuck Norris joke\nAccess: Everyone')
-    async def chuck(self, ctx):
-        response = requests.get('https://api.chucknorris.io/jokes/random')
-        if response.status_code == 200:
-            data = response.json()
-            await ctx.send(embed=discord.Embed(title="Chuck Norris Joke", description=data['value']))
-        else:
-            raise error_messages.YouMadeAMistake(value="Chuck",
-                                                 message=f"There was an error getting a Chuck Norris joke ({response.status_code})")
-
-    @commands.command(help='Get a random (useless) fact\nAccess: Everyone')
-    async def fact(self, ctx):
-        response = requests.get('https://uselessfacts.jsph.pl/random.json?language=en')
-        if response.status_code == 200:
-            data = response.json()
-            await ctx.send(embed=discord.Embed(title="Random Fact", description=data['text']))
-        else:
-            raise error_messages.YouMadeAMistake(value="fact",
-                                                 message=f"There was an error getting a random fact ({response.status_code})")
-
     @commands.command(help="Get Insulted by a piece of code\nAccess: Everyone")
     async def insult(self, ctx):
         response = requests.get("https://insult.mattbas.org/api/insult.json")
@@ -234,22 +148,6 @@ class Fun(commands.Cog):
         else:
             raise error_messages.YouMadeAMistake(value="insult",
                                                  message=f"There was an error getting an insult ({response.status_code})")
-
-    @commands.command(help="Yo Momma Jokes so slow she didn't worry about the speed of light\nAccess: Everyone")
-    async def yomomma(self, ctx):
-        response = requests.get("https://api.yomomma.info/")
-        if response.status_code == 200:
-            data = response.json()
-            embed = discord.Embed(
-                title="Yo Momma",
-                description=data['joke'],
-                colour=discord.Colour.blurple(),
-                timestamp=datetime.datetime.utcnow()
-            )
-            await ctx.send(embed=embed)
-        else:
-            raise error_messages.YouMadeAMistake(value="yomomma",
-                                                 message=f"There was an error getting a Yo Momma joke ({response.status_code})")
 
     @commands.command(help="Aur karo Computer Science\nAccess: Everyone")
     async def geek(self, ctx):
