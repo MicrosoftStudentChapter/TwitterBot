@@ -36,3 +36,7 @@ for news_item in news_list:
         in_reply_to_tweet_id=int(
             last_tweet.data['id']) if last_tweet is not None else None)
     client.like(last_tweet.data['id'])
+
+cursor.execute('''DROP TABLE News''')
+connection.commit()
+
