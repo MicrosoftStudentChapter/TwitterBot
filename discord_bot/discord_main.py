@@ -148,8 +148,9 @@ async def on_ready():
 @commands.check_any(commands.has_role('Staff'), commands.is_owner())
 async def ping(ctx):
     bot_latency = str((round(client.latency * 1000, 2))) + ' ms'
+    print(bot_latency)
     await ctx.send(
-        embed=discord.Embed(title="Ping Check", description=f"The Bot ping is {bot_latency * 1000} ms"))
+        embed=discord.Embed(title="Ping Check", description=f"The Bot ping is {bot_latency}", colour=discord.Colour.blurple()))
 
 
 @client.command(help='Enables Different Categories\nAccess: Administrator')
