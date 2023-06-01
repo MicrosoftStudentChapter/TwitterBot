@@ -16,6 +16,8 @@ cursor = connection.cursor()
 news_list = list(cursor.execute(
     '''SELECT * FROM News ORDER BY CASE WHEN SUBREDDIT = 'usersub' THEN 1 ELSE 2 END, IMPORTANCE DESC LIMIT 10'''))
 cursor.close()
+if len(news_list) < 3:
+    exit()
 for index in range(len(news_list)):
     if news_list[index][1] == 'usersub':
         news_list.insert(-1, news_list.pop(index))
