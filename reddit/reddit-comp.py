@@ -2,7 +2,7 @@ from os import getenv
 import praw  # pip install praw
 from dotenv import load_dotenv  # pip install python-dotenv
 import sqlite3
-from twitter.get_trends import hot
+from get_trends import hot
 load_dotenv()
 
 with open('reddit/interest.txt', 'r') as file:
