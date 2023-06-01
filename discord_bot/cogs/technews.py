@@ -20,6 +20,8 @@ class TechNews(commands.Cog):
     @tasks.loop(minutes=90)
     async def tech_validate(self):
         query = list(cursor.execute('''select * from News where SEEN = 0'''))
+        if len(query) == 0:
+            return
         ch = random.choice(seq=query)
         channel = self.client.get_channel(988184220327366746)  # TODO: Change in Production build
         news = await channel.send(
