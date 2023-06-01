@@ -117,6 +117,16 @@ class Moderation(commands.Cog):
         else:
             raise error_messages.YouMadeAMistake(value=role.name, message=f"Get on {member.display_name}'s level")
 
+    @commands.command(help='Give a role to multiple Members\nAccess: Manage Roles Permission')
+    @commands.check_any(commands.has_permissions(manage_roles=True), commands.is_owner())
+    async def add_multiple(self, ctx, role: discord.Role, *members: discord.Member):
+        if (role.position < ctx.author.top_role.position) or ctx.author.is_owner():
+            for member in members:
+                await member.add_roles(role, reason=None, atomic=True)
+        else:
+            raise error_messages.YouMadeAMistake(value=role.name, message=f"You do not have enough permissions")
+        await ctx.message.add_reaction('✔')
+
     @commands.command(help="Create a Poll\nAccess: Everyone")
     async def poll(self, ctx, question: str, *options):
         if len(options) < 2:
