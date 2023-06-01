@@ -15,7 +15,6 @@ connection = sqlite3.connect('../twitterBot.db')
 cursor = connection.cursor()
 news_list = list(cursor.execute(
     '''SELECT * FROM News ORDER BY CASE WHEN SUBREDDIT = 'usersub' THEN 1 ELSE 2 END, IMPORTANCE DESC LIMIT 10'''))
-cursor.close()
 if len(news_list) < 3:
     exit()
 for index in range(len(news_list)):
@@ -39,4 +38,5 @@ for news_item in news_list:
 
 cursor.execute('''DROP TABLE News''')
 connection.commit()
+cursor.close()
 
