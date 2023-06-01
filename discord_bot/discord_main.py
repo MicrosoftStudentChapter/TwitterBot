@@ -22,8 +22,8 @@ def cleancode(content):
         return content
 
 
-def success():
-    return discord.Embed(title="Your wish is my command", description="That was easy 😎")
+def success(title: str = "Your wish is my command", description: str = "That was easy 😎"):
+    return discord.Embed(title=title, description=description, colour=discord.Colour.green())
 
 
 def get_prefix(client, message):
@@ -116,13 +116,20 @@ cursor = connection.cursor()
 
 @client.event
 async def on_ready():
+    cog_list = [cog.replace('.py', '' ) for cog in os.listdir('./cogs') if cog.endswith('.py')]
     await client.change_presence(
-        activity=discord.Activity(type=discord.ActivityType.playing, name="with your feelings just like your ex"))
+        activity=discord.Activity(type=discord.ActivityType.watching, name="over the server"))
     print('Bot is ready')
 
     cursor.execute('''CREATE TABLE IF NOT EXISTS cogs(name VARCHAR(20) PRIMARY KEY, toggle BIT(1));''')  # table schema
     connection.commit()
-    query = list(cursor.execute('''SELECT * FROM COGS'''))  # TODO: Figure out "insert if not present problem"
+    query = list(cursor.execute('''SELECT * FROM COGS'''))
+    cog_list_query = [cog[0] for cog in query]
+    for cog in cog_list:
+        if cog not in cog_list_query:
+            cursor.execute('''INSERT INTO COGS VALUES(?, ?)''', (cog, 1))
+            connection.commit()
+    query = list(cursor.execute('''SELECT * FROM COGS'''))
     for cog in query:
         if cog[1] == 1:
             try:
@@ -161,7 +168,7 @@ async def disable(ctx, extension: str):
     await success_message.add_reaction('✔')
 
 
-@client.command(aliases=['eval'], help='Run a snippet of code\nAccess: BotOwner')
+@client.command(aliases=['eval'], help='Run a snippet of code\nAccess: Bot Owner')
 @commands.is_owner()
 async def code(ctx, *, block):
     code_block = cleancode(block)
@@ -212,7 +219,7 @@ async def prefix(ctx, new_prefix=None):
                 file.writelines(new_prefix)
             await ctx.send(f'Changed server prefix to "**{new_prefix}**"')
         else:
-            raise BrokenPipeError("Only Invisible Character prefix arent alloed")
+            raise BrokenPipeError("Only Invisible Character prefix aren't allowed")
 
 
 @client.event
