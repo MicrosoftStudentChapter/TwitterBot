@@ -1,37 +1,38 @@
 import datetime
+import re
 import discord
 from discord.ext import commands
 from discord_bot import error_messages
 
-# TIME_REGEX = re.compile(r"(?:(\d{1,5})([hsmdw]))+?")
-# TIME_DICT = {"h": 3600, "s": 1, "m": 60, "d": 86400, "w": 604800}
+TIME_REGEX = re.compile(r"(?:(\d{1,5})([hsmdw]))+?")
+TIME_DICT = {"h": 3600, "s": 1, "m": 60, "d": 86400, "w": 604800}
 NUM_DICT = ["1️⃣", "2️⃣", "3️⃣", "4️⃣", "5️⃣", "6️⃣", "7️⃣", "8️⃣", "9️⃣", "🔟"]
 
 def success():
     return discord.Embed(title="Your wish is my command", description="That was easy 😎")
 
 
-# def convert(argument):
-#     args = argument.lower()
-#     matches = re.findall(TIME_REGEX, args)
-#     time = 0
-#     for key, value in matches:
-#         try:
-#             time += TIME_DICT[value] * float(key)
-#         except KeyError:
-#             raise commands.BadArgument(
-#                 f"{value} is an invalid time key! h|m|s|d|w are valid arguments"
-#             )
-#         except ValueError:
-#             raise commands.BadArgument(f"{key} is not a number!")
-#     return round(time)
+def convert(argument):
+    args = argument.lower()
+    matches = re.findall(TIME_REGEX, args)
+    time = 0
+    for key, value in matches:
+        try:
+            time += TIME_DICT[value] * float(key)
+        except KeyError:
+            raise commands.BadArgument(
+                f"{value} is an invalid time key! h|m|s|d|w are valid arguments"
+            )
+        except ValueError:
+            raise commands.BadArgument(f"{key} is not a number!")
+    return round(time)
 
 
 class Moderation(commands.Cog):
     def __init__(self, client):
         self.client = client
 
-    @commands.command(help="Ban a member")
+    @commands.command(help="Ban a Member\nAccess: Ban Members Permission")
     @commands.check_any(commands.has_permissions(ban_members=True), commands.is_owner())
     async def ban(self, ctx, member: discord.Member, *, reason="exbo ki marzi"):
         if member == ctx.message.author:
@@ -40,7 +41,7 @@ class Moderation(commands.Cog):
         success_message = await ctx.send(embed=success())
         await success_message.add_reaction('✔')
 
-    @commands.command(help="Unban a member")
+    @commands.command(help="Unban a Member\nAccess: Ban Members Permission")
     @commands.check_any(commands.has_permissions(ban_members=True), commands.is_owner())
     async def unban(self, ctx, member: discord.Member, *, reason="🎶 Everyone makes mistakes 🎶"):
         if member == ctx.message.author:
@@ -50,7 +51,7 @@ class Moderation(commands.Cog):
         success_message = await ctx.send(embed=success())
         await success_message.add_reaction('✔')
 
-    @commands.command(help="Unban a member")
+    @commands.command(help="Kick a Member\nAccess: Kick Members Permission")
     @commands.check_any(commands.has_permissions(kick_members=True), commands.is_owner())
     async def kick(self, ctx, member: discord.Member, *, reason="🦵"):
         if member == ctx.message.author:
@@ -60,17 +61,18 @@ class Moderation(commands.Cog):
         success_message = await ctx.send(embed=success())
         await success_message.add_reaction('✔')
 
-    # @commands.command(help='Give someone a Timeout (max 28 days)')
-    # @commands.check_any(commands.has_permissions(
-    # kick_members=True), commands.is_owner()) async def timeout(self, ctx, member: discord.Member, duration: str =
-    # '1h', *, reason='bad boi'):  // Fix this if member == ctx.message.author: raise
-    #  error_messages.YouMadeAMistake(value=member.display_name, message="Why do you think you have been a naughty
-    #  boy 👄") if convert(duration) > 2419200 or convert(duration) < 0: raise error_messages.YouMadeAMistake(
-    #  value=duration, message="Timeout can be between 1 second and 28 days") await member.timeout(
-    #  until=datetime.timedelta(seconds=convert(duration)), reason=reason) success_message = await ctx.send(
-    #  embed=success()) await success_message.add_reaction('✔')
-
-    @commands.command(help="Purge the Last `x` messages")
+    @commands.command(help='Give someone a Timeout (max 28 days)\nAccess: Timeout Members Permission')
+    @commands.check_any(commands.is_owner())  # TODO: Fix (commands.has_permissions(kick_members=True), )
+    async def timeout(self, ctx, member: discord.Member, *, time: convert):
+        if member == ctx.message.author:
+            raise error_messages.YouMadeAMistake(value=member.display_name,
+                                                 message="You're trying to timeout yourself...")
+        if time > 2419200:
+            raise error_messages.YouMadeAMistake(value=member.display_name,
+                                                 message="You can't timeout someone for more than 28 days")
+        await member.timeout_for(time)
+        await ctx.send(embed=success())
+    @commands.command(help="Purge the Last `x` messages\nAccess: Manage Messages Permission")
     @commands.check_any(commands.has_permissions(manage_messages=True), commands.is_owner())
     async def purge(self, ctx, number_messages: int = 10):
         await ctx.message.delete()
@@ -78,7 +80,7 @@ class Moderation(commands.Cog):
         success_message = await ctx.send(embed=success())
         await success_message.add_reaction('✔')
 
-    @commands.command(help="Purge all messages from a user")
+    @commands.command(help="Purge all messages from a user\nAccess: Manage Messages Permission")
     @commands.check_any(commands.has_permissions(manage_messages=True), commands.is_owner())
     async def purge_user(self, ctx, member: discord.Member, number_messages: int = 150):
         passed_before = ctx.message
@@ -88,14 +90,14 @@ class Moderation(commands.Cog):
         success_message = await ctx.send(embed=success())
         await success_message.add_reaction('✔')
 
-    @commands.command(help="Change someone's Nickname", alias=["nick"])
+    @commands.command(help="Change someone's Nickname\nAccess: Manage Messages Permission", alias=["nick"])
     @commands.check_any(commands.has_permissions(manage_messages=True), commands.is_owner())
     async def nickname(self, ctx, member: discord.Member, *, new_nick: str):
         await member.edit(nick=new_nick)
         success_message = await ctx.send(embed=success())
         await success_message.add_reaction('✔')
 
-    @commands.command(help="Give someone a role")
+    @commands.command(help="Give Role to Member\nAccess: Manage Roles Permission")
     @commands.check_any(commands.has_permissions(manage_roles=True), commands.is_owner())
     async def add(self, ctx, member: discord.Member, role: discord.Role):
         if (role.position < ctx.author.top_role.position) or ctx.author.is_owner():
@@ -105,7 +107,7 @@ class Moderation(commands.Cog):
         else:
             raise error_messages.YouMadeAMistake(value=role.name, message=f"Get on {member.display_name}'s level")
 
-    @commands.command(help="Take a role from someone")
+    @commands.command(help="Remove Role from Member\nAccess: Manage Roles Permission")
     @commands.check_any(commands.has_permissions(manage_roles=True), commands.is_owner())
     async def remove(self, ctx, member: discord.Member, role: discord.Role):
         if (role.position < ctx.author.top_role.position) or ctx.author.is_owner():
@@ -115,7 +117,7 @@ class Moderation(commands.Cog):
         else:
             raise error_messages.YouMadeAMistake(value=role.name, message=f"Get on {member.display_name}'s level")
 
-    @commands.command(help="Create a Poll")
+    @commands.command(help="Create a Poll\nAccess: Everyone")
     async def poll(self, ctx, question: str, *options):
         if len(options) < 2:
             raise error_messages.YouMadeAMistake(value=options, message="You need at least 2 options")
