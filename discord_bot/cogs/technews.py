@@ -24,6 +24,8 @@ class TechNews(commands.Cog):
             return
         ch = random.choice(seq=query)
         channel = self.client.get_channel(988184220327366746)  # TODO: Change in Production build
+        if channel is None:
+            return
         news = await channel.send(
             embed=discord.Embed(title="How do you like this?", description=f"{ch[3]}\n [Here]({ch[4]})", ))
         cursor.execute('''UPDATE News SET SEEN = ? WHERE ID IS ?''', (str(news.id), ch[0]))
